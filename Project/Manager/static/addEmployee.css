@@ -1,0 +1,159 @@
+body {
+    font-family: Arabswell;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-color: #f8f9fa;
+}
+
+.title {
+    font-family: Arabswell;
+}
+
+.header {
+    font-family: Arabswell;
+    background-color: white;
+    padding: 1% 4%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    width: 250px;
+    height: auto;
+}
+
+.footer {
+    color: white;
+    background-color: #007bff;
+}
+
+.username {
+    float: left;
+}
+
+.body {
+    padding-top: 1.5%;
+    padding-bottom: 10%;
+}
+.username{
+    font-family: Rubik;
+}
+.body table {
+    font-family: Rubik;
+    width: 80%; /* Adjust the width of the table */
+    border-collapse: collapse;
+    margin-top: 20px; /* Space between the table and the preceding content */
+}
+.table-container {
+    margin: 0 auto; /* This will center the container horizontally */
+    width: 80%; /* Adjust the width as needed */
+}
+.body td {
+    padding: 10px;
+    border: 1px solid #ced4da;
+    text-align: center; /* Center text in cells */
+}
+
+.navbar {
+    background-color: #007bff;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+}
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar li {
+    display: inline;
+    margin-left: 20px; /* Adjust margin as needed */
+}
+
+.navbar li a {
+    text-decoration: none;
+    color: #FFF; /* Adjust color as needed */
+}
+
+table {
+    font-family: Rubik;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px; /* Space between the table and the preceding content */
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center; /* Center text in cells */
+    width: 20%; /* Each column takes 20% of the table width */
+}
+
+th {
+    background-color: #f2f2f2; /* Background color for headers */
+    font-weight: bold;
+}
+main form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: right;
+}
+
+main input[type="name"],
+main input[type="text"],
+main input[type="password"],
+main input[type="button"],
+main button{
+    font-family: "Rubik";
+    width: 100%; /* Maintains full width for select */
+    padding: 10px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
+/* Additional styles for select element to remove default appearance */
+select {
+    font-family: "Rubik";
+    width: 100%;
+    padding: 16px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #f1f1f1;
+}
+
+main button {
+    background-color: #007bff;
+    color: white;
+    /*padding: 10px 20px;*/
+    /*border: none;*/
+    /*border-radius: 4px;*/
+    /*cursor: pointer;*/
+}
+.warning{
+    color: #ff1c00;
+    font-family: Rubik;
+}
+.success-message{
+    color: #00ff57;
+    font-family: Rubik;
+}
+@font-face {
+    font-family: Arabswell;
+    src: url(fonts/arabswell.ttf);
+}
+@font-face {
+    font-family: Rubik;
+    src: url(fonts/Rubik.ttf);
+}

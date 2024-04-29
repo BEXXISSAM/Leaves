@@ -1,0 +1,152 @@
+body {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-color: #f8f9fa;
+    padding-top: 1.5%;
+    padding-bottom: 1.5%;
+}
+
+.title, body, .header {
+    font-family: Arabswell;
+}
+
+.header {
+    background-color: white;
+    padding: 1% 4%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    width: 250px;
+    height: auto;
+}
+
+.footer {
+    color: white;
+    background-color: #007bff;
+}
+
+.username {
+    float: left;
+}
+
+.username, table, select,
+main input[type="name"],
+main input[type="text"],
+main input[type="password"],
+main input[type="button"],
+main button,
+.success-message,
+.warning
+{
+    font-family: Rubik;
+}
+
+.table-container {
+    margin: 0 auto; /* This will center the container horizontally */
+}
+
+.body td {
+    padding: 10px;
+    border: 1px solid #ced4da;
+    text-align: center; /* Center text in cells */
+}
+
+.navbar {
+    background-color: #007bff;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+}
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar li {
+    display: inline;
+    margin-left: 20px; /* Adjust margin as needed */
+}
+
+.navbar li a {
+    text-decoration: none;
+    color: #FFF; /* Adjust color as needed */
+}
+
+table {
+    width: 400px;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center; /* Center text in cells */
+    width: 20%; /* Each column takes 20% of the table width */
+}
+
+th {
+    background-color: #f2f2f2; /* Background color for headers */
+    font-weight: bold;
+}
+main form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: right;
+}
+
+.table-container {
+    margin: 0 auto;
+}
+main input[type="name"],
+main input[type="text"],
+main input[type="password"],
+main input[type="button"],
+main button{
+    width: 100%; /* Maintains full width for select */
+    padding: 10px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
+select {
+    width: 100%;
+    padding: 16px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #f1f1f1;
+}
+
+main button {
+    background-color: #007bff;
+    color: white;
+}
+.warning{
+    color: #ff1c00;
+}
+.success-message{
+    color: #00ff57;
+}
+@font-face {
+    font-family: Arabswell;
+    src: url(fonts/arabswell.ttf);
+}
+@font-face {
+    font-family: Rubik;
+    src: url(fonts/Rubik.ttf);
+}
