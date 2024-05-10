@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> تدبير العطل </title>
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static 'home.css' %}">
+        <link rel="icon" href="{% static 'images\COA.png' %}">
+    </head>
+
+    <body>
+        <div class="header">
+            <a href="/home">
+                <img class="logo" src="{% static 'images\logo.png' %}" alt="Logo">
+            </a>
+            <h1 class="title">تطــبيقية تدبـير الـرخــص</h1>
+        </div>
+        <div class="navbar">
+        {% if request.user.employee.isAdmin %}
+                <ul>
+                    <li><a href="/admin_home">الصفحة الرئيسية</a></li>
+                    <li><a href="/add_leave"> اضافة رخصة </a></li>
+                    <li><a href="/my_leaves"> رخصي </a></li>
+                    <li><a href="/all_employees"> لائحة الموظفين </a></li>
+                    <li><a href="/add_department"> تدبير الشعب </a></li>
+                    <li><a href="/manage_holidays"> تدبير العطل </a></li>
+                    <li><a href="/search"> البحث </a> </li>
+                </ul>
+                <ul>
+                    <li class="username">{{ request.user.get_full_name }}</li>
+                </ul>
+        {% else %}
+                <ul>
+                    <li><a href="/home">الصفحة الرئيسية</a></li>
+                    <li><a href="/my_leaves"> رخصي </a></li>
+                    <li><a href="/add_leave"> اضافة رخصة </a></li>
+                </ul>
+                <ul>
+                    <li class="username">{{ request.user.get_full_name }}</li>
+                </ul>
+        {% endif %}
+        </div>
+        <div class="body">
+            <main>
+                    <div class="add_holiday">
+                        <form name="add_holiday" method="post">
+                            {% csrf_token %}
+                            <label for="name">الاسم : </label>
+                            <input id="name" name="name" type="text" required>
+                            <label for="starting_date">تاريخ البداية : </label>
+                            <input id="starting_date" name="starting_date" type="date" required>
+                            <label for="duration">المدة : </label><br>
+                            <input id="duration" name="duration" type="number" required>
+                            <button type="submit">اضافة</button>
+                        </form>
+                        <br>
+                    </div>
+                    <div class="list_holidays">
+                        <table>
+                            <tr>
+                                <th colspan="4"> العطل </th>
+                            </tr>
+                            {% for holiday in holidays  %}
+                            <tr>
+                                <td>{{ holiday.name }}</td>
+                                <td>{{ holiday.duration }}</td>
+                                <td>{{ holiday.holidayStartingDay|date:'d/m/Y' }}</td>
+                                <td>
+                                    <a href="{% url 'edit_holiday' holiday.id %}">تعديل</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                        <br>
+                        {% if holidays.has_other_pages %}
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if holidays.has_previous %}
+                                    <a href="?page=1">&laquo; الصفحة الأولى | </a>
+                                    <a href="?page={{ holidays.previous_page_number }}">الصفحة السابقة | </a>
+                                {% endif %}
+                                <span class="current">
+                                    الصفحة {{ holidays.number }} من {{ holidays.paginator.num_pages }}.
+                                </span>
+                                {% if holidays.has_next %}
+                                    <a href="?page={{ holidays.next_page_number }}">الصفحة التالية | </a>
+                                    <a href="?page={{ holidays.paginator.num_pages }}">الصفحة الأخيرة | &raquo;</a>
+                                {% endif %}
+                            </span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    </main>
+                    </div>
+        <div class="footer">
+            <p class="copyright">وزارة العدل - محكمة الاستئناف العيون</p>
+        </div>
+    </body>
+</html>
