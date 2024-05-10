@@ -1,4 +1,4 @@
-# Your Project Name
+# Leaves Management Project 
 
 This is a Django project for managing leaves.
 
@@ -71,11 +71,14 @@ Before you begin, ensure you have the following installed on your system:
      pip install -r requirements.txt
      ```
 
-7. **Run migrations:**
+7. **Set up the database and migrations:**
 
-   - Apply the database migrations to set up the database schema:
+   - Before running migrations, ensure you have a database configured. Django supports various database backends such as SQLite, PostgreSQL, MySQL, etc. Modify the `settings.py` file in the `yourproject` directory to configure your database settings accordingly.
+
+   - After configuring your database, run the following commands to create migrations and apply them to your database:
 
      ```bash
+     python manage.py makemigrations
      python manage.py migrate
      ```
 
