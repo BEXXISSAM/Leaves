@@ -32,10 +32,8 @@ Before you begin, ensure you have the following installed on your system:
    - It's recommended to use a virtual environment to isolate your project dependencies. Navigate to your project directory in your terminal or command prompt and run the following commands:
 
      ```bash
-     # Install virtualenv if you haven't already
      pip install virtualenv
 
-     # Create a virtual environment named 'env'
      virtualenv env
 
      # Activate the virtual environment
@@ -52,7 +50,7 @@ Before you begin, ensure you have the following installed on your system:
    - Clone the repository to your local machine using Git:
 
      ```bash
-     git clone https://github.com/yourusername/yourproject.git
+     git clone https://github.com/BEXXISSAM/Leaves.git
      ```
 
 5. **Navigate to the project directory:**
