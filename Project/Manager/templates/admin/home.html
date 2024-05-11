@@ -64,6 +64,24 @@
                 </tr>
                 {% endfor %}
             </table>
+          <br>
+            {% if leaves.has_other_pages %}
+            <div class="pagination">
+                <span class="step-links">
+                    {% if leaves.has_previous %}
+                        <a href="?page=1">&laquo; الصفحة الأولى | </a>
+                        <a href="?page={{ leaves.previous_page_number }}">الصفحة السابقة | </a>
+                    {% endif %}
+                    <span class="current">
+                        الصفحة {{ leaves.number }} من {{ leaves.paginator.num_pages }}.
+                    </span>
+                    {% if leaves.has_next %}
+                        <a href="?page={{ leaves.next_page_number }}">الصفحة التالية | </a>
+                        <a href="?page={{ leaves.paginator.num_pages }}">الصفحة الأخيرة | &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+            {% endif %}
         </div>
         <div class="footer">
             <p class="copyright">وزارة العدل - محكمة الاستئناف العيون</p>
