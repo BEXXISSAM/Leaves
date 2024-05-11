@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from .models import *
 from .models import holidays
 from django.contrib.auth.decorators import login_required
@@ -12,6 +12,20 @@ from django.http import HttpResponseRedirect
 from datetime import date
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.decorators import user_passes_test
+
+
+def admin_required(function):
+    def wrapper(request, *args, **kwargs):
+        def is_admin(request):
+            return request.user.is_authenticated and request.user.employee.isAdmin
+
+        if user_passes_test(is_admin)(request):
+            return function(request, *args, **kwargs)
+        else:
+            return redirect('not_admin')  
+
+    return wrapper
 
 
 @login_required
@@ -38,7 +52,7 @@ def add_leave(request):
             employeeId=employee_id,
             leaveDate=leave_date,
             duration=duration,
-            endOfLeave=end_of_leave + timedelta(days=1),  # Add 1 for inclusive end date
+            endOfLeave=end_of_leave + timedelta(days=1),  
             leaveNumber=leave_count + 1,
             isDelayed=False
         )
@@ -49,46 +63,44 @@ def add_leave(request):
     return render(request, 'addLeave.html')
 
 
+@admin_required
 @login_required
 def add_employee(request):
-    if request.user.employee.isAdmin:
-        if request.method == 'POST':
-            first_name = request.POST.get('first_name')
-            last_name = request.POST.get('last_name')
-            username = request.POST.get('username')
-            PPR = request.POST.get('username')
-            department_id = request.POST.get('department')
-            password = request.POST.get('password')
-            isAdmin = request.POST.get('isAdmin') == 'TRUE'
-            full_name = first_name + ' ' + last_name
-            if User.objects.filter(username=username).exists():
-                messages.error(request, 'هذا الموظف يمتلك حسابا بالفعل')
-                return redirect('add_employee')
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        username = request.POST.get('username')
+        PPR = request.POST.get('username')
+        department_id = request.POST.get('department')
+        password = request.POST.get('password')
+        isAdmin = request.POST.get('isAdmin') == 'TRUE'
+        full_name = first_name + ' ' + last_name
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'هذا الموظف يمتلك حسابا بالفعل')
+            return redirect('add_employee')
 
-            user = User.objects.create_user(username, password=password)
-            user.first_name = first_name
-            user.last_name = last_name
-            user.is_superuser = isAdmin
-            user.is_staff = isAdmin
-            user.save()
-            department = Department.objects.get(pk=department_id)
-            employee = Employee.objects.create(
-                username=user,
-                PPR=PPR,
-                full_name=full_name,
-                department=department,
-                isAdmin=isAdmin
-            )
-            messages.success(request, ' تم اضافة الموظف بنجاح')
-            departments = Department.objects.all()
-            context = {'departments': departments, 'success_message': ' تم اضافة الموظف بنجاح'}
-            return render(request, 'addEmployee.html', context)
-        else:
-            departments = Department.objects.all ()
-            context = {'departments': departments}
-            return render(request, 'addEmployee.html', context)
+        user = User.objects.create_user(username, password=password)
+        user.first_name = first_name
+        user.last_name = last_name
+        user.is_superuser = isAdmin
+        user.is_staff = isAdmin
+        user.save()
+        department = Department.objects.get(pk=department_id)
+        employee = Employee.objects.create(
+            username=user,
+            PPR=PPR,
+            full_name=full_name,
+            department=department,
+            isAdmin=isAdmin
+        )
+        messages.success(request, ' تم اضافة الموظف بنجاح')
+        departments = Department.objects.all()
+        context = {'departments': departments, 'success_message': ' تم اضافة الموظف بنجاح'}
+        return render(request, 'addEmployee.html', context)
     else:
-        return HttpResponseRedirect(reverse('not_admin'))
+        departments = Department.objects.all ()
+        context = {'departments': departments}
+        return render(request, 'addEmployee.html', context)
 
 
 def user_login(request):
@@ -111,6 +123,11 @@ def user_login(request):
         return render(request, 'login.html')
 
 
+def logout_view(request):
+    logout(request)
+    return render(request, 'login.html')
+
+
 @login_required
 def home_view(request):
     user_department = request.user.employee.department
@@ -118,28 +135,47 @@ def home_view(request):
     current_month = today.month
 
     leaves_list = Leaves.objects.filter(
-        employeeId__department=user_department
+        employeeId__department=user_department,
+        isDelayed=False
     ).filter(
         Q(leaveDate__year=today.year, leaveDate__month=current_month) |
         Q(endOfLeave__year=today.year, endOfLeave__month=current_month) |
         Q(leaveDate__lt=today, endOfLeave__gt=today)
     )
-    return render(request, 'home.html', {'leaves': leaves_list})
+
+    paginator = Paginator(leaves_list, 10)
+    page = request.GET.get('page')
+
+    try:
+        leaves = paginator.page(page)
+    except PageNotAnInteger:
+        leaves = paginator.page(1)
+    except EmptyPage:
+        leaves = paginator.page(paginator.num_pages)
+
+    return render(request, 'home.html', {'leaves': leaves})
 
 
-@login_required
+@admin_required
 def admin_view(request):
-    if request.user.employee.isAdmin:
-        today = date.today ()
-        current_month = today.month
-        leaves_list = Leaves.objects.filter(
+    today = date.today()
+    current_month = today.month
+    leaves_list = Leaves.objects.filter(
         Q(leaveDate__year=today.year, leaveDate__month=current_month) |
         Q(endOfLeave__year=today.year, endOfLeave__month=current_month) |
         Q(leaveDate__lt=today, endOfLeave__gt=today)
     )
-        return render(request, 'admin/home.html', {'leaves': leaves_list})
-    else:
-        return HttpResponseRedirect(reverse('not_admin'))
+    paginator = Paginator(leaves_list, 10)
+    page = request.GET.get('page')
+
+    try:
+        leaves = paginator.page(page)
+    except PageNotAnInteger:
+        leaves = paginator.page(1)
+    except EmptyPage:
+        leaves = paginator.page(paginator.num_pages)
+
+    return render(request, 'admin/home.html', {'leaves': leaves})
 
 
 @login_required
@@ -147,32 +183,30 @@ def not_admin(request):
     return render(request, 'admin/notAdmin.html', {})
 
 
+@admin_required
 @login_required
 def add_department(request):
-    if request.user.employee.isAdmin:
-        departments = Department.objects.all()
-        context = {
-            'department': departments
-        }
-        if request.method == 'POST':
-            name = request.POST.get('name')
+    departments = Department.objects.all()
+    context = {
+        'department': departments
+    }
+    if request.method == 'POST':
+        name = request.POST.get('name')
 
-            if Department.objects.filter(name=name).exists():
-                messages.error(request, 'هذه الشعبة موجودة بالفعل')
-                return redirect('add_department')
-
-            department = Department.objects.create(name=name)
-            messages.success(request, 'تم اضافة الشعبة بنجاح.')
-
+        if Department.objects.filter(name=name).exists():
+            messages.error(request, 'هذه الشعبة موجودة بالفعل')
             return redirect('add_department')
 
-        else:
-            return render(request, 'addDepartment.html', context)
+        department = Department.objects.create(name=name)
+        messages.success(request, 'تم اضافة الشعبة بنجاح.')
+
+        return redirect('add_department')
+
     else:
-        return HttpResponseRedirect(reverse('not_admin'))
+        return render(request, 'addDepartment.html', context)
 
 
-@login_required
+@admin_required
 def edit_department(request, department_id):
     if request.method == 'POST':
         try:
@@ -193,31 +227,30 @@ def edit_department(request, department_id):
             return redirect('add_department')
 
 
+@admin_required
 @login_required
 def manage_holidays(request):
-    if request.user.employee.isAdmin:
-        if request.method == 'POST':
-            name = request.POST.get('name')
-            starting_date = request.POST.get('starting_date')
-            duration = request.POST.get('duration')
-            holiday = holidays.objects.create(name=name, holidayStartingDay=starting_date, duration=duration)
-            messages.success(request, "تمت اضافة العطلة بنجاح")
-            return redirect('manage_holidays')
-        else:
-            holidays_list = holidays.objects.all()
-            paginator = Paginator(holidays_list, 10)  # Show 10 holidays per page
-            page = request.GET.get('page')
-            try:
-                holidays_page = paginator.page(page)
-            except PageNotAnInteger:
-                holidays_page = paginator.page(1)
-            except EmptyPage:
-                holidays_page = paginator.page(paginator.num_pages)
-            return render(request, 'manageHolidays.html', {'holidays': holidays_page})
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        starting_date = request.POST.get('starting_date')
+        duration = request.POST.get('duration')
+        holiday = holidays.objects.create(name=name, holidayStartingDay=starting_date, duration=duration)
+        messages.success(request, "تمت اضافة العطلة بنجاح")
+        return redirect('manage_holidays')
     else:
-        return redirect(reverse('not_admin'))
+        holidays_list = holidays.objects.all()
+        paginator = Paginator(holidays_list, 10) 
+        page = request.GET.get('page')
+        try:
+            holidays_page = paginator.page(page)
+        except PageNotAnInteger:
+            holidays_page = paginator.page(1)
+        except EmptyPage:
+            holidays_page = paginator.page(paginator.num_pages)
+        return render(request, 'manageHolidays.html', {'holidays': holidays_page})
 
 
+@admin_required
 @login_required
 def edit_holiday(request, holiday_id):
     if request.method == 'POST':
@@ -241,6 +274,7 @@ def edit_holiday(request, holiday_id):
             return redirect('manage_holidays')
 
 
+@admin_required
 @login_required
 def search_results(request):
     name = request.GET.get('name', None)
@@ -272,7 +306,8 @@ def search_results(request):
     return render(request, 'search_results.html', {'leaves': leaves_list})
 
 
-@login_required()
+@admin_required
+@login_required
 def search_form(request):
     return render(request, 'search.html')
 
@@ -285,7 +320,8 @@ def employee_leaves(request):
     return render(request, 'my_leaves.html', {'employee': employee, 'leaves': leaves})
 
 
-@login_required()
+@admin_required
+@login_required
 def all_employees(request):
     employees = Employee.objects.all().order_by('full_name')
     paginator = Paginator(employees, 10)
@@ -299,7 +335,8 @@ def all_employees(request):
     return render(request, 'all_employees.html', {'employees': employees})
 
 
-@login_required()
+@admin_required
+@login_required
 def edit_employee(request, employee_id):
     employee = get_object_or_404(Employee, pk=employee_id)
     departments = Department.objects.all()
@@ -338,7 +375,8 @@ def edit_employee(request, employee_id):
     return render(request, 'editEmployee.html', {'employee': employee, 'departments': departments})
 
 
-@login_required()
+@admin_required
+@login_required
 def delete_holiday(request, holiday_id):
     try:
         holiday = holidays.objects.get(pk=holiday_id)
@@ -349,7 +387,8 @@ def delete_holiday(request, holiday_id):
     return redirect('manage_holidays')
 
 
-@login_required()
+@admin_required
+@login_required
 def edit_leave(request, leave_id):
     try:
         leave = Leaves.objects.get(pk=leave_id)
@@ -382,8 +421,7 @@ def edit_leave(request, leave_id):
             leaveDate=leave_date,
             duration=duration,
             endOfLeave=end_of_leave + timedelta(days=1),
-            leaveNumber=leave.leaveNumber + 1,
-            isDelayed=True
+            leaveNumber=leave.leaveNumber + 1
         )
         new_leave.save()
 
@@ -398,3 +436,7 @@ def edit_leave(request, leave_id):
 
     context = {'leave': leave}
     return render(request, 'modify_leave.html', context)
+
+
+
+
