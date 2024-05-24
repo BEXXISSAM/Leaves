@@ -41,8 +41,7 @@ def add_leave(request):
 
         while current_date <= end_of_leave:
         	if holidays.objects.filter(holidayStartingDay=current_date).exists():
-                	end_of_leave += timedelta(days=1);
-
+                	end_of_leave += timedelta(days=1)
 		current_date += timedelta(days=1)
 
         leave_count = Leaves.objects.filter(employeeId=employee_id).count()
