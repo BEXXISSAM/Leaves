@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>لائحة الموظفين</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'home.css' %}" />
+    <link rel="icon" href="{% static 'images\COA.png' %}" />
+  </head>
+  <body>
+    <div class="header">
+      <a href="/home">
+        <img class="logo" src="{% static 'images\logo.png' %}" alt="Logo" />
+      </a>
+      <h1 class="title">تطــبيقية تدبـير الـرخــص</h1>
+    </div>
+    <div class="navbar">
+      {% if request.user.employee.isAdmin %}
+      <ul>
+        <li><a href="/admin_home">الصفحة الرئيسية</a></li>
+        <li><a href="/add_leave"> اضافة رخصة </a></li>
+        <li><a href="/my_leaves"> رخصي </a></li>
+        <li><a href="/all_employees"> لائحة الموظفين </a></li>
+        <li><a href="/add_department"> تدبير الشعب </a></li>
+        <li><a href="/manage_holidays"> تدبير العطل </a></li>
+        <li><a href="/search"> البحث </a></li>
+      </ul>
+      <ul>
+        <li class="username">{{ request.user.get_full_name }}</li>
+      </ul>
+      {% else %}
+      <ul>
+        <li><a href="/home">الصفحة الرئيسية</a></li>
+        <li><a href="/my_leaves"> رخصي </a></li>
+        <li><a href="/add_leave"> اضافة رخصة </a></li>
+      </ul>
+      <ul>
+        <li class="username">{{ request.user.get_full_name }}</li>
+      </ul>
+      {% endif %}
+    </div>
+    <div class="body">
+      <main>
+        <div class="search-container">
+          <input type="text" id="searchInput" placeholder="ابحث عن موظف..." />
+          <button class="add-employee-btn">
+            <a href="{% url 'add_employee' %}">اضافة موظف</a>
+          </button>
+        </div>
+        <table>
+          <tr>
+            <th colspan="2"></th>
+            <th>الاسم الكامل</th>
+            <th>رقم التأجبر</th>
+            <th>الشعبة</th>
+          </tr>
+          {% for employee in employees %}
+          <tr class="employeeRow">
+            <td>
+              <a href="{% url 'edit_employee' employee.id %}"
+                ><button>تعديل</button></a
+              >
+            </td>
+            <td>
+              <a href="{% url 'show_employee_leaves' employee.id %}"
+                ><button>معاينة</button></a
+              >
+            </td>
+            <td>{{ employee.full_name }}</td>
+            <td>{{ employee.username }}</td>
+            <td>{{ employee.department }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="4">لا يوجد موظفين</td>
+          </tr>
+          {% endfor %}
+        </table>
+        <br />
+        {% if employees.has_other_pages %}
+        <div class="pagination">
+          <span class="step-links">
+            {% if employees.has_previous %}
+            <a href="?page=1">&laquo; الصفحة الأولى | </a>
+            <a href="?page={{ employees.previous_page_number }}"
+              >الصفحة السابقة |
+            </a>
+            {% endif %}
+            <span class="current">
+              الصفحة {{ employees.number }} من {{ employees.paginator.num_pages
+              }}.
+            </span>
+            {% if employees.has_next %}
+            <a href="?page={{ employees.next_page_number }}"
+              >الصفحة التالية |
+            </a>
+            <a href="?page={{ employees.paginator.num_pages }}"
+              >الصفحة الأخيرة | &raquo;</a
+            >
+            {% endif %}
+          </span>
+        </div>
+        {% endif %}
+      </main>
+    </div>
+    <div class="footer">
+      <p class="copyright">وزارة العدل - محكمة الاستئناف العيون</p>
+    </div>
+  </body>
+</html>
+<script>
+  var input = document.getElementById("searchInput");
+  var employeeRows = document.getElementsByClassName("employeeRow");
+
+  input.addEventListener("input", function () {
+    var query = input.value.trim().toLowerCase();
+    for (var i = 0; i < employeeRows.length; i++) {
+      var fullName = employeeRows[i]
+        .getElementsByTagName("td")[1]
+        .textContent.toLowerCase();
+      var username = employeeRows[i]
+        .getElementsByTagName("td")[2]
+        .textContent.toLowerCase();
+      var department = employeeRows[i]
+        .getElementsByTagName("td")[3]
+        .textContent.toLowerCase();
+
+      if (
+        fullName.indexOf(query) > -1 ||
+        username.indexOf(query) > -1 ||
+        department.indexOf(query) > -1
+      ) {
+        employeeRows[i].style.display = "";
+      } else {
+        employeeRows[i].style.display = "none";
+      }
+    }
+  });
+</script>
+<style>
+  .search-container {
+    max-width: 45%;
+    margin: 0 auto;
+    padding: 0 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  #searchInput {
+    width: 70%;
+  }
+</style>

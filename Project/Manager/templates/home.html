@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>الصفحة الرئيسية</title>
+    {% load static %}
+    <link rel="stylesheet" href="{%static 'home.css' %}" />
+    <link rel="icon" href="{% static 'images\COA.png' %}" />
+  </head>
+  <body>
+    <div class="header">
+      <a href="/home">
+        <img class="logo" src="{% static 'images\logo.png' %}" alt="Logo" />
+      </a>
+      <h1 class="title">تطــبيقية تدبـير الـرخــص</h1>
+    </div>
+    <div class="navbar">
+      {% if request.user.employee.isAdmin %}
+      <ul>
+        <li><a href="/admin_home">الصفحة الرئيسية</a></li>
+        <li><a href="/add_leave"> اضافة رخصة </a></li>
+        <li><a href="/my_leaves"> رخصي </a></li>
+        <li><a href="/all_employees"> لائحة الموظفين </a></li>
+        <li><a href="/add_department"> تدبير الشعب </a></li>
+        <li><a href="/manage_holidays"> تدبير العطل </a></li>
+        <li><a href="/search"> البحث </a></li>
+      </ul>
+      <ul>
+        <li class="username">{{ request.user.get_full_name }}</li>
+      </ul>
+      {% else %}
+      <ul>
+        <li><a href="/home">الصفحة الرئيسية</a></li>
+        <li><a href="/my_leaves"> رخصي </a></li>
+        <li><a href="/add_leave"> اضافة رخصة </a></li>
+      </ul>
+      <ul>
+        <li class="username">{{ request.user.get_full_name }}</li>
+      </ul>
+      {% endif %}
+    </div>
+    <div class="body">
+      <h1 class="sub_title">
+        الرخص القادمة لموظفي شعبة {{ request.user.employee.department }}
+      </h1>
+      <table>
+        <tr>
+          <th>الموظف</th>
+          <th>رقم التاجير</th>
+          <th>تاريخ بداية الرخصة</th>
+          <th>تاريخ نهاية الرخصة</th>
+          <th>المدة</th>
+        </tr>
+        {% for leave in leaves %}
+        {% if not leave.isDelayed %}
+        <tr>
+          <td>{{ leave.employeeId.username.get_full_name }}</td>
+          <td>{{ leave.employeeId.username }}</td>
+          <td>{{ leave.leaveDate|date:'d/m/Y' }}</td>
+          <td>{{ leave.endOfLeave|date:'d/m/Y' }}</td>
+          <td>{{ leave.duration }} يوم</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+      </table>
+
+      <br />
+      {% if leaves.has_other_pages %}
+      <div class="pagination">
+        <span class="step-links">
+          {% if leaves.has_previous %}
+          <a href="?page=1">&laquo; الصفحة الأولى | </a>
+          <a href="?page={{ leaves.previous_page_number }}"
+            >الصفحة السابقة |
+          </a>
+          {% endif %}
+          <span class="current">
+            الصفحة {{ leaves.number }} من {{ leaves.paginator.num_pages }}.
+          </span>
+          {% if leaves.has_next %}
+          <a href="?page={{ leaves.next_page_number }}">الصفحة التالية | </a>
+          <a href="?page={{ leaves.paginator.num_pages }}"
+            >الصفحة الأخيرة | &raquo;</a
+          >
+          {% endif %}
+        </span>
+      </div>
+      {% endif %}
+    </div>
+    <div class="footer">
+      <p class="copyright">وزارة العدل - محكمة الاستئناف العيون</p>
+    </div>
+  </body>
+</html>

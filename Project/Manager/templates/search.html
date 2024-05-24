@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>صفحة البحث</title>
+    {% load static %}
+    <link rel="stylesheet" href="{%static 'addEmployee.css' %}" />
+    <link rel="icon" href="{% static 'images\COA.png' %}" />
+  </head>
+  <body>
+    <div class="header">
+      <a href="/home">
+        <img class="logo" src="{% static 'images\logo.png' %}" alt="Logo" />
+      </a>
+      <h1 class="title">تطــبيقية تدبـير الـرخــص</h1>
+    </div>
+    <div class="navbar">
+      {% if request.user.employee.isAdmin %}
+      <ul>
+        <li><a href="/admin_home">الصفحة الرئيسية</a></li>
+        <li><a href="/add_leave"> اضافة رخصة </a></li>
+        <li><a href="/my_leaves"> رخصي </a></li>
+        <li><a href="/all_employees"> لائحة الموظفين </a></li>
+        <li><a href="/add_department"> تدبير الشعب </a></li>
+        <li><a href="/manage_holidays"> تدبير العطل </a></li>
+        <li><a href="/search"> البحث </a></li>
+      </ul>
+      <ul>
+        <li class="username">{{ request.user.get_full_name }}</li>
+      </ul>
+      {% else %}
+      <ul>
+        <li><a href="/home">الصفحة الرئيسية</a></li>
+        <li><a href="/my_leaves"> رخصي </a></li>
+        <li><a href="/add_leave"> اضافة رخصة </a></li>
+      </ul>
+      <ul>
+        <li class="username">{{ request.user.get_full_name }}</li>
+      </ul>
+      {% endif %}
+    </div>
+    <div class="body">
+      <main>
+        <h1 class="sub_title">صفحة البحث</h1>
+        <form
+          class="search_form"
+          method="GET"
+          action="{% url 'search_results' %}"
+        >
+          <label for="name"> الاسم الكامل : </label>
+          <input id="name" type="text" name="name" />
+          <label for="start_date"> تاريخ البداية : </label><br />
+          <input id="start_date" type="date" name="start_date" /><br />
+          <label for="end_date"> تاريخ النهاية : </label><br />
+          <input id="end_date" type="date" name="end_date" /><br />
+          <label for="username"> رقم التأجير : </label>
+          <input id="username" type="text" name="username" />
+          <button type="submit">البحث</button>
+        </form>
+      </main>
+    </div>
+    <div class="footer">
+      <p class="copyright">وزارة العدل - محكمة الاستئناف العيون</p>
+    </div>
+  </body>
+</html>

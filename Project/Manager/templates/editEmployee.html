@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تعديل موظف</title>
+    {% load static %}
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'addEmployee.css' %}"
+    />
+    <link rel="icon" href="{% static 'images\COA.png' %}" />
+  </head>
+  <body>
+    <div class="header">
+      <a href="/home">
+        <img class="logo" src="{% static 'images\logo.png' %}" alt="Logo" />
+      </a>
+      <h1 class="title">تطــبيقية تدبـير الـرخــص</h1>
+    </div>
+    <div class="navbar">
+      {% if request.user.employee.isAdmin %}
+      <ul>
+        <li><a href="/admin_home">الصفحة الرئيسية</a></li>
+        <li><a href="/add_leave"> اضافة رخصة </a></li>
+        <li><a href="/my_leaves"> رخصي </a></li>
+        <li><a href="/all_employees"> لائحة الموظفين </a></li>
+        <li><a href="/add_department"> تدبير الشعب </a></li>
+        <li><a href="/manage_holidays"> تدبير العطل </a></li>
+        <li><a href="/search"> البحث </a></li>
+      </ul>
+      <ul>
+        <li class="username">{{ request.user.get_full_name }}</li>
+      </ul>
+      {% else %}
+      <ul>
+        <li><a href="/home">الصفحة الرئيسية</a></li>
+        <li><a href="/my_leaves"> رخصي </a></li>
+        <li><a href="/add_leave"> اضافة رخصة </a></li>
+      </ul>
+      <ul>
+        <li class="username">{{ request.user.get_full_name }}</li>
+      </ul>
+      {% endif %}
+    </div>
+    <div class="body">
+      <main>
+        {% if error %}
+        <p class="warning">{{ error }}</p>
+        {% endif %} {% if success_message %}
+        <p class="success-message">{{ success_message }}</p>
+        {% endif %}
+        <form method="post" action="{% url 'edit_employee' employee.id %}">
+          {% csrf_token %}
+          <label for="first_name">الاســم :</label>
+          <input
+            type="text"
+            id="first_name"
+            name="first_name"
+            value="{{ employee.username.first_name }}"
+            readonly
+          />
+          <label for="last_name">النسب : </label>
+          <input
+            type="text"
+            id="last_name"
+            name="last_name"
+            value="{{ employee.username.last_name }}"
+            readonly
+          />
+          <label for="username">رقم التأجير : </label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            value="{{ employee.username.username }}"
+            readonly
+          />
+          <label for="department">الــشـعـــبــة : </label>
+          <select id="department" name="department" required>
+            {% for department in departments %}
+            <option value="{{ department.id }}">{{ department.name }}</option>
+            {% endfor %}
+          </select>
+          <label for="isAdmin"> مشرف </label>
+          <input
+            type="checkbox"
+            id="isAdmin"
+            name="isAdmin"
+            value="TRUE"
+            {%
+            if
+            employee.isAdmin
+            %}
+            checked
+            {%
+            endif
+            %}
+          />
+          <button type="submit">تعديل الموظف</button>
+          <button type="button" id="deleteBtn" class="delete-button">
+            حذف الموظف
+          </button>
+        </form>
+      </main>
+    </div>
+    <div class="footer">
+      <p class="copyright">وزارة العدل - محكمة الاستئناف العيون</p>
+    </div>
+  </body>
+</html>
+<script>
+  document.getElementById("deleteBtn").addEventListener("click", function () {
+    if (confirm("هل أنت متأكد من حذف هذا الموظف؟")) {
+      var form = document.querySelector("form");
+      var input = document.createElement("input");
+      input.setAttribute("type", "hidden");
+      input.setAttribute("name", "delete");
+      input.setAttribute("value", "true");
+      form.appendChild(input);
+      form.submit();
+    }
+  });
+</script>

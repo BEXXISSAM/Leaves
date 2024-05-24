@@ -1,0 +1,170 @@
+body {
+    font-family: Arabswell, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-color: #f8f9fa;
+}
+
+.title {
+    font-family: Arabswell, sans-serif;
+}
+
+.header {
+    font-family: Arabswell, sans-serif;
+    background-color: white;
+    padding: 1% 4%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    width: 250px;
+    height: auto;
+}
+
+.footer {
+    color: white;
+    background-color: #007bff;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+p
+
+
+.username {
+    float: left;
+}
+
+.body {
+    padding-top: 1.5%;
+    padding-bottom: 10%;
+}
+
+.body table {
+    font-family: Rubik;
+    width: 80%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+.table-container {
+    margin: 0 auto;
+    width: 80%;
+}
+.body td {
+    padding: 10px;
+    border: 1px solid #ced4da;
+    text-align: center;
+}
+
+.navbar {
+    background-color: #007bff;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+}
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar li {
+    display: inline;
+    margin-left: 20px;
+}
+
+.navbar li a {
+    text-decoration: none;
+    color: #FFF;
+}
+
+table {
+    font-family: Rubik;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    width: 20%;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+main form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: right;
+}
+
+main input[type="name"],
+main input[type="text"],
+main input[type="password"],
+main input[type='date'],
+main select,
+main button{
+    font-family: Rubik, serif;
+    width: calc(100% - 20px);
+    padding: 12px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+main input[type="name"],
+main input[type="text"],
+main input[type="password"],
+main input[type="date"],
+select,
+main button{
+    font-family: "Rubik", serif;
+}
+
+main button {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+.warning{
+    color: #ff1c00;
+    font-family: Rubik;
+}
+.success-message{
+    color: #00ff57;
+    font-family: Rubik;
+}
+
+#deleteBtn {
+    background-color: red !important;
+    color: white !important;
+}
+
+@font-face {
+    font-family: Arabswell;
+    src: url(fonts/arabswell.ttf);
+}
+@font-face {
+    font-family: Rubik;
+    src: url(fonts/Rubik.ttf);
+}
