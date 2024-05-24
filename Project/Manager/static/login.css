@@ -23,7 +23,7 @@ header {
 
 .footer {
     color: white;
-    background-color: #007bff;
+    background-color: #c0272c;
     position: fixed;
     left: 0;
     bottom: 0;
@@ -77,7 +77,7 @@ main input,
 
 main button {
     font-family: Arabswell;
-    background-color: #007bff;
+    background-color: #c0272c;
     color: white;
     padding: 10px 20px;
     border: none;
