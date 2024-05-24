@@ -31,18 +31,22 @@ def admin_required(function):
 @login_required
 def add_leave(request):
     if request.method == 'POST':
-        employee_id = request.user.employee
+        employee_id = request.user.employee.id  
         leave_date = request.POST.get('leaveDate')
         duration = request.POST.get('duration')
-        leave_date = datetime.strptime(leave_date, '%Y-%m-%d').date()
 
+        if not leave_date or not duration:
+            messages.error(request, 'Please provide leave date and duration.')
+            return redirect('add_leave')
+
+        leave_date = datetime.strptime(leave_date, '%Y-%m-%d').date()
         end_of_leave = leave_date + timedelta(days=int(duration) - 1)
         current_date = leave_date
 
         while current_date <= end_of_leave:
-        	if holidays.objects.filter(holidayStartingDay=current_date).exists():
-                	end_of_leave += timedelta(days=1)
-		current_date += timedelta(days=1)
+            if holidays.objects.filter(holidayStartingDay=current_date).exists():
+                end_of_leave += timedelta(days=1)
+            current_date += timedelta(days=1)
 
         leave_count = Leaves.objects.filter(employeeId=employee_id).count()
         leave = Leaves.objects.create(
@@ -61,34 +65,38 @@ def add_leave(request):
     return render(request, 'addLeave.html')
 
 
+
 def add_leave_by_id(request, employee_id):
     employee = get_object_or_404(Employee, pk=employee_id)
 
     if request.method == 'POST':
-        leave_date = request.POST.get ('leaveDate')
+        leave_date = request.POST.get('leaveDate')
         duration = request.POST.get('duration')
-        leave_date = datetime.strptime(leave_date, '%Y-%m-%d').date ()
 
+        if not leave_date or not duration:
+            messages.error(request, 'Please provide leave date and duration.')
+            return redirect('show_employee_leaves', employee_id=employee_id)
+
+        leave_date = datetime.strptime(leave_date, '%Y-%m-%d').date()
         end_of_leave = leave_date + timedelta(days=int(duration) - 1)
         current_date = leave_date
 
         while current_date <= end_of_leave:
-        	if holidays.objects.filter(holidayStartingDay=current_date).exists ():
-                	end_of_leave += timedelta(days=1)
-
-        	current_date += timedelta(days=1)
+            if holidays.objects.filter(holidayStartingDay=current_date).exists():
+                end_of_leave += timedelta(days=1)
+            current_date += timedelta(days=1)
 
         leave_count = Leaves.objects.filter(employeeId=employee_id).count()
         leave = Leaves.objects.create(
             employeeId=employee_id,
             leaveDate=leave_date,
             duration=duration,
-            endOfLeave=end_of_leave + timedelta (days=1),
+            endOfLeave=end_of_leave + timedelta(days=1),
             leaveNumber=leave_count + 1,
             isDelayed=False
         )
         leave.save()
-        messages.success (request, 'تمت إضافة الرخصة بنجاح')
+        messages.success(request, 'تمت إضافة الرخصة بنجاح')
         return redirect('show_employee_leaves', employee_id=employee_id)
 
     return render(request, 'add_employee_leave.html', {'employee': employee})
