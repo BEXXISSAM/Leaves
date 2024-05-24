@@ -77,11 +77,7 @@
             oninvalid="this.setCustomValidity(' المرجو ادخال تاريخ بداية الرخصة  ')"
           /><br />
           <label for="duration">المدة :</label>
-          <select id="duration" name="duration">
-            <option value="24">24 يوم</option>
-            <option value="30">30 يوم</option>
-            <option value="54">54 يوم</option>
-          </select>
+          <input type="number" required id="duration" name="duration">
           <button type="submit">اضافة الرخصة</button>
         </form>
       </main>
