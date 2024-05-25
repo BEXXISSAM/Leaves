@@ -25,8 +25,9 @@ body {
 }
 
 .footer {
+    font-family: Rubik;
     color: white;
-    background-color: #007bff;
+    background-color: #c0272c;
     position: fixed;
     left: 0;
     bottom: 0;
@@ -62,7 +63,7 @@ p
 }
 
 .navbar {
-    background-color: #007bff;
+    background-color: #c0272c;
     color: #fff;
     display: flex;
     justify-content: space-between;
@@ -141,7 +142,7 @@ main button{
 }
 
 main button {
-    background-color: #007bff;
+    background-color: #c0272c;
     color: white;
     cursor: pointer;
     padding-top: 2px;
