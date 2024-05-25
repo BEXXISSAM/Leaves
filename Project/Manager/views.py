@@ -29,10 +29,11 @@ def admin_required(function):
 
 
 @login_required
-def add_leave_by_id(request, employee_id):
+def add_leave(request):
     employee = get_object_or_404(Employee, pk=employee_id)
 
     if request.method == 'POST':
+        employee_id = request.user.employee
         leave_date = request.POST.get('leaveDate')
         duration = request.POST.get('duration')
         leave_date = datetime.strptime(leave_date, '%Y-%m-%d').date ()
