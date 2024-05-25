@@ -91,12 +91,6 @@ Before you begin, ensure you have the following installed on your system:
    - Access the development server at `http://localhost:8000` in your web browser.
 
 ## Usage
-<img width="1680" alt="login" src="https://github.com/BEXXISSAM/Leaves/assets/129122326/8932ec06-cd8b-433d-9a4c-a79a6a736343">
-<img width="1680" alt="thisMonthLeaves" src="https://github.com/BEXXISSAM/Leaves/assets/129122326/337a215d-f0eb-456d-8958-4da3cb306c8b">
-<img width="1680" alt="myLeaves" src="https://github.com/BEXXISSAM/Leaves/assets/129122326/f7e69983-511f-49b0-a79b-9e8cfd76038c">
-<img width="1680" alt="addLeaves" src="https://github.com/BEXXISSAM/Leaves/assets/129122326/ecc36da4-8831-4072-a237-b1fdfebe6c85">
-
-
 1. Access the admin interface at `http://localhost:8000/admin` to manage employees, departments, leaves, etc.
 2. Use the provided forms or API endpoints to add, edit, or delete data.
 3. Customize the project to fit your specific requirements by editing the Django models, views, and templates.
