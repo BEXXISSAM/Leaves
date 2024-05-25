@@ -87,6 +87,7 @@ main input[type="name"],
 main input[type="text"],
 main input[type="password"],
 main input[type="button"],
+main input[type="number"],
 main button,
 main input[type="date"],
 select {
