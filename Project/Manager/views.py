@@ -30,8 +30,6 @@ def admin_required(function):
 
 @login_required
 def add_leave(request):
-    employee = get_object_or_404(Employee, pk=employee_id)
-
     if request.method == 'POST':
         employee_id = request.user.employee
         leave_date = request.POST.get('leaveDate')
@@ -60,9 +58,9 @@ def add_leave(request):
         )
         leave.save()
         messages.success (request, 'تمت إضافة الرخصة بنجاح')
-        return redirect('add_leave_by_id', employee_id=employee_id)
+        return redirect('add_leave')
 
-    return render(request, 'add_employee_leave.html', {'employee': employee})
+    return render(request, 'addLeave.html')
 
 
 def add_leave_by_id(request, employee_id):
