@@ -120,6 +120,7 @@ main input[type="name"],
 main input[type="text"],
 main input[type="password"],
 main input[type='date'],
+main input[type="number"],
 main select,
 main button{
     font-family: Rubik, serif;
