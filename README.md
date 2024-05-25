@@ -58,7 +58,7 @@ Before you begin, ensure you have the following installed on your system:
    - Change into the project directory:
 
      ```bash
-     cd yourproject
+     cd Project
      ```
 
 6. **Install dependencies:**
